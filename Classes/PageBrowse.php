@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 
 /**
  * This class implements page browser plugin
@@ -149,10 +150,12 @@ class PageBrowse extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         }
 
         $this->adjustForForcedNumberOfLinks();
-
-        $path = $GLOBALS['TSFE']->tmpl->getFileName($this->conf['templateFile']);
-        if ($path !== null && file_exists($path)) {
+        try {
+            $path = GeneralUtility::makeInstance(FilePathSanitizer::class)
+                ->sanitize( $this->conf['templateFile'] ?: '');
             $this->templateCode = file_get_contents($path);
+        } catch (\Exception $e) {
+            //do nothing
         }
 
         // Call post-init hook
