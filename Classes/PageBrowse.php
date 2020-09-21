@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 
 /**
@@ -218,7 +219,7 @@ class PageBrowse extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             $GLOBALS['TSFE']->additionalHeaderData[$key] =
                 $this->getTemplateService()->substituteMarkerArray($subPart, array(
                     '###SITE_REL_PATH###' => $GLOBALS['TSFE']->config['config']['absRefPrefix'] .
-                        ExtensionManagementUtility::siteRelPath($this->extKey),
+                        PathUtility::getAbsoluteWebPath(ExtensionManagementUtility::extPath($this->extKey)),
                 ));
         }
     }
